@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HelloWorld : MonoBehaviour
 {
+    public Text label;
     public int min = 1;
 
     public int max = 1000;
@@ -39,6 +41,7 @@ public class HelloWorld : MonoBehaviour
     private void UpdateGuess()
     {
         guess = (min + max) / 2;
+        label.text = "Are you wish that number " + guess + "?";
         print("Are you wish that number " + guess +"?");
     }
 }
