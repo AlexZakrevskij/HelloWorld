@@ -394,8 +394,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8776fd4ba666c4242bf71cf9acb7be74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgnMsg: {fileID: 0}
-  endMsg: {fileID: 0}
+  bgnMsg: {fileID: 192311320}
+  endMsg: {fileID: 80638618}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
