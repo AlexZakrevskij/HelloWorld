@@ -29,13 +29,6 @@ public class GreenPlayer : MonoBehaviour
         GetPlayerInfo();
         SetPlayerInfo();
     }
-
-    // Update is called once per frame
-    private void Update()
-    {
-       
-    }
-
     public void SetPlayerInfo()
     {
         playerName = tpmPlayerName; 
@@ -62,9 +55,7 @@ public class GreenPlayer : MonoBehaviour
         }
         
     }
-
-   
-
+    
     private void GetPlayerInfo()
     {
     tpmPlayerName  = playerName;

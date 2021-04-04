@@ -10,31 +10,23 @@ public class BattleController : MonoBehaviour
     private int tmpCount;
     private int iconNum;
     public GreenPlayer hero;
-    public bool cycleFigth = false;
+    public bool cycleFigth;
     public GreenEnemy mob;
-    /*private KeyCode playerCode = KeyCode.S;
-    private KeyCode enemyCode = KeyCode.L;*/
 
     // Start is called before the first frame update
 
     void Start()
     {
+        cycleFigth = false;
         print("Для начала боя нажмите ENTER");
         iconNum = 0;
         tmpCount = enemyCount;
-        Fight();  
+        InvokeRepeating("Fight", 0, 1.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            /*iconNum = 0;
-            tmpCount = enemyCount;
-            Fight(); */   
-        }
-        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             hero.SetPlayerInfo();
@@ -43,67 +35,36 @@ public class BattleController : MonoBehaviour
             Start();
         }
     }
-    /*public void PlayerMakeAttack(int enemies)
-    {
-        hero.PlayerAttack();
-        UpdateAfterAttack(mob.enemyHealth, 1);
-    }
-    
-    public void EnemyMakeAttack()
-    {
-        mob.EnemyAttack();
-        UpdateAfterAttack(hero.playerHealth, 2);
 
-    }*/
     public void MakeAttack()
     {
-        if (hero.playerHealth > 0)
+        if (hero.playerHealth > 0 && enemyCount > 0)
         {
             hero.PlayerAttack();
-            UpdateAfterAttack(mob.enemyHealth, 1);    
-        }
-        if (enemyCount > 0)
-        {
+            UpdateAfterAttack(mob.enemyHealth, 1);
             mob.EnemyAttack();
-            UpdateAfterAttack(hero.playerHealth, 2);    
+            UpdateAfterAttack(hero.playerHealth, 2);
         }
-
-        
-        if(hero.playerHealth <= 0)
-        {
-            cycleFigth = true;
-            //CancelInvoke("MakeAttack");
-            GameOver(cycleFigth);
-        }
-        if(enemyCount <= 0)
+        if (hero.playerHealth <= 0 || enemyCount <= 0)
         {
             cycleFigth = true;
             //CancelInvoke("MakeAttack");
             GameOver(cycleFigth);
         }
     }
+
     void Fight()
     {
-        if (!cycleFigth)
+        if (cycleFigth == false)
         {
-             InvokeRepeating("MakeAttack",0,1.5f);
+            MakeAttack();
         }
         else
         {
-            //cycleFigth = true;
-            GameOver(cycleFigth);
-        }
-        /*if (enemyCount > 0 || !cycleFigth)
-        {
-            InvokeRepeating("MakeAttack",1.5F,1.5f);   
-        }
-        else
-        {
+            CancelInvoke("Fight");
             cycleFigth = true;
             GameOver(cycleFigth);
-        }*/
-
-
+        }
     }
 
     private void KillingEnemy(int iNum)
@@ -111,57 +72,59 @@ public class BattleController : MonoBehaviour
         mob.enemySprite = mob.mass[iNum];
         mob.spriteRenderer.sprite = mob.enemySprite;
     }
+
     private void UpdateAfterAttack(int hp, int num)
     {
         switch (num)
+        {
+            case 1:
             {
-                case 1:
+                if (hp <= 0)
                 {
-                    if (hp<=0)
+                    mob.enemyTextMesh.text = $"Имя: {mob.enemyName} {tmpCount}\nСтатус: Мертв";
+                    PLayerHeal();
+                    tmpCount--;
+                    iconNum++;
+
+                    if (tmpCount > 0)
                     {
-                        mob.enemyTextMesh.text = $"Имя: {mob.enemyName} {tmpCount}\nСтатус: Мертв";
-                        PLayerHeal();
-                        tmpCount--;
-                        iconNum++;
-                        
-                        if (tmpCount > 0)
-                        {
-                            KillingEnemy(iconNum);
-                            mob.SetEnemyInfo();    
-                        }
-                        else
-                        {
-                            GameOver(cycleFigth);
-                        }
+                        KillingEnemy(iconNum);
+                        mob.SetEnemyInfo();
                     }
                     else
                     {
-                        mob.enemyTextMesh.text = $"Имя: {mob.enemyName} {tmpCount}\nЗдоровье: {hp}";
+                        cycleFigth = true;
+                        GameOver(cycleFigth);
                     }
-                }; break;
-                case 2:
+                }
+                else
                 {
-                    if (hp<=0)
-                    {
-                        hero.playerTextMesh.text = $"Имя: {hero.playerName}\nСтатус: Мертв";
-                    }
-                    else
-                    {
-                        hero.playerTextMesh.text = $"Имя: {hero.playerName}\nЗдоровье: {hp}";
-                    }
-                }; break;
-            }
+                    mob.enemyTextMesh.text = $"Имя: {mob.enemyName} {tmpCount}\nЗдоровье: {hp}";
+                }
+            }; break;
+            case 2:
+            {
+                if (hp <= 0)
+                {
+                    hero.playerTextMesh.text = $"Имя: {hero.playerName}\nСтатус: Мертв";
+                }
+                else
+                {
+                    hero.playerTextMesh.text = $"Имя: {hero.playerName}\nЗдоровье: {hp}";
+                }
+            }; break;
+        }
     }
+
     private void GameOver(bool endall)
     {
-        if (endall == true)
+        if (endall)
         {
-            CancelInvoke("MakeAttack");
-                
+            print($"Все враги побеждены, {hero.playerName} победил в бою!");
+            print("Нажмите ПРОБЕЛ для продолжения");
+            CancelInvoke("Fight");
+            Update();
         }
-        print($"Все враги побеждены, {hero.playerName} победил в бою!");
-        print("Нажмите ПРОБЕЛ для продолжения");
-        Start();
     }
 
     void PLayerHeal()

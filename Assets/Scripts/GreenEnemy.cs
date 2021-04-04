@@ -43,7 +43,6 @@ public class GreenEnemy : MonoBehaviour
         enemyTextMesh.text = $"Имя: {tpmEnemyName}\nЗдоровье: {tpmEnemyHealth}";
         
         enemySprite = tpmEnemySprite;
-        //spriteRenderer.sprite = enemySprite;
     }
     public void EnemyAttack()
     {
