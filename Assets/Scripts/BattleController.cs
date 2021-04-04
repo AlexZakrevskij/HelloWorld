@@ -18,7 +18,6 @@ public class BattleController : MonoBehaviour
     void Start()
     {
         cycleFigth = false;
-        print("Для начала боя нажмите ENTER");
         iconNum = 0;
         tmpCount = enemyCount;
         InvokeRepeating("Fight", 0, 1.5f);
